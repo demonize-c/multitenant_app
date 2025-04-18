@@ -4,6 +4,7 @@ package org.example.tenantapp.controllers;
 import jakarta.persistence.EntityManager;
 import org.example.tenantapp.models.Customer;
 import org.example.tenantapp.services.HibernateUtil;
+import org.example.tenantapp.services.LocalConnectionManager;
 import org.example.tenantapp.services.TransactionManager;
 import org.example.tenantapp.utils.Helper;
 import org.hibernate.Session;
@@ -19,7 +20,10 @@ public class HomeController {
     HibernateUtil util;
 
     @Autowired
-    TransactionManager transactionManager;
+    TransactionManager
+            transactionManager;
+    @Autowired
+    LocalConnectionManager lcm;
 
     @GetMapping("/")
     public String index(){
@@ -48,12 +52,13 @@ public class HomeController {
 
 //        Customer customer = Customer.findOne(Long.valueOf(402));
 //        System.out.println(customer);
-        Customer customer = new Customer();
-        customer.name  = "Mohan das";
-        customer.email = "sourab@gmail.com";
-        customer.save();
-        customer.email="mohan@gmail.com";
-        customer.update();
+//        Customer customer = new Customer();
+//        customer.name  = "Mohan das";
+//        customer.email = "sourab@gmail.com";
+//        customer.save();
+//        customer.email="mohan@gmail.com";
+//        customer.update();
+        lcm.run();
         return "Hello World";
     }
 }

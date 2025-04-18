@@ -17,7 +17,7 @@ public class TransactionManager {
 //    static ThreadLocal<EntityManager> em = new ThreadLocal<EntityManager>(){
 //        @Override
 //        protected EntityManager initialValue() {
-//            return HibernateUtil.getDefaultEntityManager();
+//            return HibernateUtil.getDefaultEntityManagerFactory();
 //        }
 //    };
 //    static int poolSize = 0;
@@ -36,7 +36,7 @@ public class TransactionManager {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        EntityManager useEm = HibernateUtil.getDefaultEntityManager();
+        EntityManager useEm = HibernateUtil.getDefaultEntityManagerFactory();
         useEm.getTransaction().begin();
         try{
             function.apply(useEm);
@@ -62,7 +62,7 @@ public class TransactionManager {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        EntityManager useEm = HibernateUtil.getDefaultEntityManager();
+        EntityManager useEm = HibernateUtil.getDefaultEntityManagerFactory();
         useEm.getTransaction().begin();
         T result;
         try{
@@ -90,7 +90,7 @@ public class TransactionManager {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        EntityManager useEm = HibernateUtil.getDefaultEntityManager();
+        EntityManager useEm = HibernateUtil.getDefaultEntityManagerFactory();
         useEm.getTransaction().begin();
         try{
             function.apply(useEm);
@@ -117,7 +117,7 @@ public class TransactionManager {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        EntityManager useEm = HibernateUtil.getDefaultEntityManager();
+        EntityManager useEm = HibernateUtil.getDefaultEntityManagerFactory();
         useEm.getTransaction().begin();
         T result = null;
         try{
@@ -144,7 +144,7 @@ public class TransactionManager {
     }
     public  static void  swicthDefaultSource(){
 //        em.remove();
-//        em.set(HibernateUtil.getDefaultEntityManager());
+//        em.set(HibernateUtil.getDefaultEntityManagerFactory());
     }
 
 //    public static <T extends BaseEntity> T execute(Object o) {
