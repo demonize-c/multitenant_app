@@ -26,10 +26,11 @@ public class HomeController {
 //        util.hello();
 //        EntityManager em = util.getSession();
 //        em.getTransaction().begin();
-        Customer customer = new Customer();
-        customer.name  = Helper.name();
-        customer.email = Helper.email();
-        customer.save();
+//        for (int i = 402; i < 602; i++) {
+//
+//            Customer customer = Customer.findOne(Long.valueOf(i));
+//            customer.remove();
+//        }
 //        em.persist(customer);
 //        em.getTransaction().commit();
 //        em.close();
@@ -45,6 +46,14 @@ public class HomeController {
 //        }
 //        Helper.print(TransactionManager.getSource());
 
+//        Customer customer = Customer.findOne(Long.valueOf(402));
+//        System.out.println(customer);
+        Customer customer = new Customer();
+        customer.name  = "Mohan das";
+        customer.email = "sourab@gmail.com";
+        customer.save();
+        customer.email="mohan@gmail.com";
+        customer.update();
         return "Hello World";
     }
 }

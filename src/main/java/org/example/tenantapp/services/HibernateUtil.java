@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Properties;
 
 @Service
-@Scope("singleton")
 public class HibernateUtil {
 
     public static EntityManagerFactory emf;
@@ -33,7 +32,7 @@ public class HibernateUtil {
     public static Properties getDefaultSource(){
         Properties props = new Properties();
         props.put("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
-        props.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/kg_db?useSSL=false&serverTimezone=UTC");
+        props.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/kg_db?useSSL=true&serverTimezone=UTC");
         props.put("jakarta.persistence.jdbc.user", "kg_user");
         props.put("jakarta.persistence.jdbc.password", "kg_pass");
         props.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");

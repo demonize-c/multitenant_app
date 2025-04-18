@@ -2,6 +2,6 @@ package org.example.tenantapp.helperclasses;
 
 import jakarta.persistence.EntityManager;
 
-public interface FunctionWithSession{
-    void apply(EntityManager em);
+public interface RemoveFunctionInterface {
+      void apply(EntityManager em);
 }
