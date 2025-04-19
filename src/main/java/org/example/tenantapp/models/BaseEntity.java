@@ -1,10 +1,7 @@
 package org.example.tenantapp.models;
 
 import jakarta.persistence.MappedSuperclass;
-import org.example.tenantapp.helperclasses.CreateFunctionInterface;
-import org.example.tenantapp.helperclasses.FindOneFunctionInterface;
-import org.example.tenantapp.helperclasses.RemoveFunctionInterface;
-import org.example.tenantapp.helperclasses.UpdateFunctionInterface;
+import org.example.tenantapp.helperclasses.*;
 import org.example.tenantapp.services.TransactionManager;
 
 import java.io.Serializable;
@@ -16,11 +13,21 @@ public class BaseEntity<T extends BaseEntity<T,I>, I>{
     public static Class<? extends BaseEntity> entityClass;
 
 
+
     public static void init(Class<? extends BaseEntity> paramClass){
        entityClass = paramClass;
     }
-    public void save(){
-        CreateFunctionInterface callback = (em) -> em.persist(this);
+
+//    public static void useConnection(ConnectionUtil connectionUtil){
+//        TransactionManager.useConnection(connectionUtil);
+//    }
+//
+//    public void  useConnection(ConnectionUtil connectionUtil){
+//        TransactionManager.useConnection(connectionUtil);
+//    }
+
+    public void save() throws Exception{
+        CreateFunctionInterface callback = (em) -> em.save(this);
         TransactionManager.execute(callback);
     }
 

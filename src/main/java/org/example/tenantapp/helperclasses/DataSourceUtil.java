@@ -1,6 +1,7 @@
 package org.example.tenantapp.helperclasses;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.example.tenantapp.services.ConnectionManager;
 
 import java.util.concurrent.Semaphore;
 
@@ -9,29 +10,40 @@ public class DataSourceUtil {
     private DataSource  dataSource;
     private Semaphore   semaphore;
     private EntityManagerFactory emf;
-    public DataSourceUtil(DataSource dataSource, Semaphore semaphore, EntityManagerFactory emf){
+    private String connKey;
+
+    public DataSourceUtil(DataSource dataSource, String connKey, EntityManagerFactory emf, Semaphore semaphore){
         this.dataSource = dataSource;
         this.semaphore  = semaphore;
         this.emf  =  emf;
+        this.connKey = connKey;
     }
 
-    public void occupy() throws InterruptedException{
-        try{
+    public void waitForTransaction() throws InterruptedException{
             this.semaphore.acquire();
-        } catch (InterruptedException e) {
-            throw new InterruptedException("There is a problem to accuire new connection");
-        }
     }
 
-    public void free(){
-        this.semaphore.release();
+    public void informTransactionEnd(){
+            this.semaphore.release();
     }
 
     public boolean isSameSource(DataSource dataSource){
-        return this.dataSource == dataSource;
+            return this.dataSource == dataSource;
     }
 
     public EntityManagerFactory getEmf() {
-        return emf;
+           return this.emf;
+    }
+
+    public DataSource getDataSource() {
+           return this.dataSource;
+    }
+
+    public String getConnKey(){
+        return this.connKey;
+    }
+
+    public int currentConnCount(){
+        return ConnectionManager.max_conn - semaphore.availablePermits();
     }
 }

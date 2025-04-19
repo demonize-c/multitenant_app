@@ -24,9 +24,11 @@ public class HibernateUtil {
 
     public static Properties getDefaultDbProps(){
         Properties props = new Properties();
+
         props.put("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
         props.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
         props.put("hibernate.current_session_context_class","thread");
+        props.put("jakarta.persistence.schema-generation.database.action", "update");
         return props;
     }
 
@@ -45,11 +47,11 @@ public class HibernateUtil {
         props.put("jakarta.persistence.jdbc.password", "kg_pass");
         return props;
     }
-    public static EntityManagerFactory getCustomEntityManagerFactory(String unique_name,String db_name, String db_user, String db_pass){
+    public static EntityManagerFactory getCustomEntityManagerFactory(String db_host, String db_port, String db_name, String db_user, String db_pass){
         Properties props = getDefaultDbProps();
-        props.put("jakarta.persistence.jdbc.url", "jdbc:mysql://localhost:3306/"+ db_name + "?useSSL=false&serverTimezone=UTC");
+        props.put("jakarta.persistence.jdbc.url", "jdbc:mysql://" + db_host + ":" + db_port+ "/" + db_name + "?useSSL=true&serverTimezone=UTC");
         props.put("jakarta.persistence.jdbc.user", db_user);
         props.put("jakarta.persistence.jdbc.password", db_pass);
-        return Persistence.createEntityManagerFactory(unique_name, props);
+        return Persistence.createEntityManagerFactory("default",props);
     }
 }

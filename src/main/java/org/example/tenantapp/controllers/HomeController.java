@@ -2,7 +2,10 @@ package org.example.tenantapp.controllers;
 
 
 import jakarta.persistence.EntityManager;
+import org.example.tenantapp.helperclasses.ConnectionUtil;
+import org.example.tenantapp.helperclasses.TestDataSource;
 import org.example.tenantapp.models.Customer;
+import org.example.tenantapp.services.ConnectionManager;
 import org.example.tenantapp.services.HibernateUtil;
 import org.example.tenantapp.services.LocalConnectionManager;
 import org.example.tenantapp.services.TransactionManager;
@@ -27,38 +30,67 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(){
-//        util.hello();
-//        EntityManager em = util.getSession();
-//        em.getTransaction().begin();
-//        for (int i = 402; i < 602; i++) {
-//
-//            Customer customer = Customer.findOne(Long.valueOf(i));
-//            customer.remove();
-//        }
-//        em.persist(customer);
-//        em.getTransaction().commit();
-//        em.close();
-//        session.close();
-//        transactionManager.run();
-//        String name = Helper.name();
-//        Helper.print(name);
-//        TransactionManager.useSource(name);
+//        lcm.createNewEntityManager(TestDataSource.get(1));
+//        lcm.createNewEntityManager(TestDataSource.get(1));
 //        try {
-//           Thread.sleep(1000 * 10);
-//        } catch (InterruptedException e) {
+//            Thread.sleep(1000 * 30);
+//        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
-//        Helper.print(TransactionManager.getSource());
+//        for (int i = 0; i < 5; i++) {
+//            TransactionManager.useConnection(this.lcm.createNewEntityManager(TestDataSource.get(i)));
+//            Customer customer = new Customer();
+//            customer.name  = Helper.name();
+//            customer.email = Helper.email();
+//            customer.save();
+//        }
+        try {
+            ConnectionUtil connUtil = this.lcm.createNewEntityManager(TestDataSource.get(0));
+//          for (int i = 0; i < 5; i++) {
+//            Helper.print("count: " + connUtil.getDataSourceCurrentConnCount());
+            TransactionManager.useConnection(connUtil);
+            Customer customer = new Customer();
+            customer.name = Helper.name();
+            customer.email = Helper.email();
+            customer.save();
+//            Thread.sleep(1000 * 10);
+        }catch (Exception e){
+            Helper.print(e.getMessage());
+            return "Error";
+        }
+//            Helper.print("a s count: " + lcm.getTotalActiveSourceCount());
+//        }
+//        try {
+//            Thread.sleep(1000 * 20);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
 
-//        Customer customer = Customer.findOne(Long.valueOf(402));
-//        System.out.println(customer);
+        return "Hello World";
+    }
+
+    @GetMapping("/check")
+    public String check() throws InterruptedException{
+//        ConnectionUtil connUtil = this.lcm.createNewEntityManager(TestDataSource.get(0));
+//        TransactionManager.useConnection(connUtil);
 //        Customer customer = new Customer();
-//        customer.name  = "Mohan das";
-//        customer.email = "sourab@gmail.com";
+//        customer.name  = Helper.name();
+//        customer.email = Helper.email();
 //        customer.save();
-//        customer.email="mohan@gmail.com";
-//        customer.update();
-        lcm.run();
+        try {
+            ConnectionUtil connUtil = this.lcm.createNewEntityManager(TestDataSource.get(0));
+//          for (int i = 0; i < 5; i++) {
+//            Helper.print("count: " + connUtil.getDataSourceCurrentConnCount());
+            TransactionManager.useConnection(connUtil);
+            Customer customer = new Customer();
+            customer.name = Helper.name();
+            customer.email = Helper.email();
+            customer.save();
+//            Thread.sleep(1000 * 20);
+        }catch (Exception e){
+            Helper.print(e.getMessage());
+            return "Error";
+        }
         return "Hello World";
     }
 }

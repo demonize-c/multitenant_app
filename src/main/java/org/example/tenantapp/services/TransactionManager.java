@@ -1,10 +1,8 @@
 package org.example.tenantapp.services;
 
 import jakarta.persistence.EntityManager;
-import org.example.tenantapp.helperclasses.CreateFunctionInterface;
-import org.example.tenantapp.helperclasses.FindOneFunctionInterface;
-import org.example.tenantapp.helperclasses.RemoveFunctionInterface;
-import org.example.tenantapp.helperclasses.UpdateFunctionInterface;
+import org.example.tenantapp.helperclasses.*;
+import org.example.tenantapp.utils.Helper;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.Semaphore;
 
@@ -29,30 +27,20 @@ public class TransactionManager {
 //        poolSize--;
 //    }
 
-    public static void execute(CreateFunctionInterface function){
+    public static ThreadLocal<ConnectionUtil> connUtil = new ThreadLocal<ConnectionUtil>();
 
-        try{
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        EntityManager useEm = HibernateUtil.getDefaultEntityManagerFactory();
-        useEm.getTransaction().begin();
-        try{
-            function.apply(useEm);
-            useEm.getTransaction().commit();
-            useEm.close();
-            semaphore.release();
-        } catch (Exception e) {
-            if(useEm.getTransaction().isActive()){
-                useEm.getTransaction().rollback();
-            }
-            if(useEm.isOpen()){
-                useEm.close();
-            }
-            semaphore.release();
-            throw new RuntimeException(e);
-        }
+    public static void useConnection(ConnectionUtil connectionUtil){
+        connUtil.set(connectionUtil);
+    }
+    public static void execute(CreateFunctionInterface function) throws Exception {
+
+        EntityManagerUtil emUtil = connUtil.get().createEntityManagerUtil();
+        emUtil.open();
+        emUtil.beginTransaction();
+        Thread.sleep(1000 * 20);
+        function.apply(emUtil);
+        emUtil.commit();
+        emUtil.close();
     }
 
     public static <T> T execute(FindOneFunctionInterface<T> function){

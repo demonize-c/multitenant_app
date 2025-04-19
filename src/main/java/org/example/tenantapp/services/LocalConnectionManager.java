@@ -2,17 +2,14 @@ package org.example.tenantapp.services;
 
 
 import jakarta.annotation.PreDestroy;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import org.example.tenantapp.helperclasses.ConnectionUtil;
 import org.example.tenantapp.helperclasses.DataSource;
-import org.example.tenantapp.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //@Configuration
 @Component
@@ -22,17 +19,27 @@ public class LocalConnectionManager {
     @Autowired
     private ConnectionManager connectionManager;
 
-    private EntityManagerFactory emf;
-    public LocalConnectionManager(){ };
-//    static ThreadLocal<>
+    private List<ConnectionUtil> connectionUtils = new ArrayList<ConnectionUtil>();
+
+    public LocalConnectionManager(){ }
 
 
-    public void createNewEntityManager(DataSource dataSource){
-       this.em  =
+    public ConnectionUtil createNewEntityManager(DataSource dataSource){
+        ConnectionUtil connUtil = this.connectionManager.createEntityManagerFactory(dataSource);
+        connectionUtils.add(connUtil);
+        return connUtil;
     }
 
     @PreDestroy
     public void onDestroy(){
-        Helper.print("destroyed");
+        System.out.println("cleanup running.");
+        for (int i = 0; i < this.connectionUtils.size(); i++) {
+            this.connectionManager.destoryEntityManagerFactory(this.connectionUtils.get(i));
+        }
+        this.connectionUtils.clear();
+    }
+
+    public int getTotalActiveSourceCount(){
+        return  this.connectionManager.getTotalActiveSourceCount();
     }
 }

@@ -6,6 +6,14 @@ public class DataSource {
     private String db_user;
     private String db_host;
     private String db_port;
+
+    public DataSource(String db_host, String db_port, String db_name, String db_user, String db_pass) {
+        this.db_host = db_host;
+        this.db_port = db_port;
+        this.db_name = db_name;
+        this.db_pass = db_pass;
+        this.db_user = db_user;
+    }
     // Getters
     public String getDb_name() {
         return db_name;
